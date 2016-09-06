@@ -16,6 +16,7 @@ class Maze {
   void setAnchor_y(const int);
   void setMaze(const vector[]);
   void print() const;
+  
  private:
   vector[] m_vecMaze;
   string m_strWall;
