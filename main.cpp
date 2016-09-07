@@ -1,12 +1,71 @@
 #include <iostream>
-#include "maze.h"
+#include <unistd.h>
+#include "person.h"
 
 using namespace std;
 
 int main(void) {
-  Maze maze(1, "[*]", "===", 40, 3);
+    Person person;
 
-  maze.print();
-  
-  return 0;
+    person.print();
+    sleep(1);
+    
+    person.moveRight();
+    sleep(1);
+    
+    person.moveDown();
+    sleep(1);
+    person.moveDown();
+    sleep(1);
+    
+    person.moveRight();
+    sleep(1);    
+    person.moveRight();
+    sleep(1);
+    
+    person.moveUp();
+    sleep(1); 
+    person.moveUp();
+    sleep(1);
+    
+    person.moveRight();
+    sleep(1);    
+    person.moveRight();
+    sleep(1);
+    
+    person.moveDown();
+    sleep(1);
+    person.moveDown();
+    sleep(1);
+    
+    person.moveRight();
+    sleep(1);
+    
+    person.moveDown();
+    sleep(1);
+    person.moveDown();
+    sleep(1);
+    
+    person.moveRight();
+    sleep(1);    
+    person.moveRight();
+    sleep(1);
+    person.moveRight();
+    sleep(1);    
+    person.moveRight();
+    sleep(1);
+
+    person.moveDown();
+    sleep(1);
+    person.moveDown();
+    sleep(1);
+
+    person.moveLeft();
+    sleep(1);
+    person.moveRight();
+    sleep(1);
+    person.moveRight();
+    sleep(1);
+    
+    return 0;
 }
