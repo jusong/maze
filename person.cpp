@@ -51,6 +51,7 @@ int Person::moveRight() {
     return ret;
 }
 
+/* 每走一步都会检查：会不会撞墙，会不会退出去了，或者成功走出去了 */
 int Person::checkMove(int _x, int _y) {
     int ret = this->m_mazeMap->checkPoint(_x, _y);
     if (MAP_YES == ret) {
@@ -70,6 +71,7 @@ int Person::checkMove(int _x, int _y) {
     }
 }
 
+/* 移动人类 */
 void Person::move(int _x, int _y) {
     this->m_iPreX = this->m_iX;
     this->m_iPreY = this->m_iY;
@@ -78,13 +80,26 @@ void Person::move(int _x, int _y) {
     this->print();
 }
 
-void Person::print() {
+/* 初始化 */
+void Person::init() {
+    //画迷宫地图
     this->m_mazeMap->print();
+    //画人
+    this->print();
+}
+
+/* 画人 */
+void Person::print() {
+    //首先把上个位置的人类擦除掉
     cout << "\e[" << this->m_mazeMap->getAnchor_y() + this-> m_iPreY << ";" << this->m_mazeMap->getAnchor_x() + this->m_iPreX << "H";
     cout << this->m_mazeMap->getRoad();
+
+    //然后再在新的位置上打印出人类
     cout << "\e[" << this->m_mazeMap->getAnchor_y() + this-> m_iY << ";" << this->m_mazeMap->getAnchor_x() + this->m_iX << "H";
     cout << this->m_strBody;
     cout << "\e[20;0H";
+
+    //最后刷新输出缓冲区
     cout.flush();
 }
 

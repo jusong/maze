@@ -5,12 +5,12 @@
 
 using namespace std;
 
-#define WALL				2 //墙
-#define ROAD			1 //道
+#define WALL		2 //墙
+#define ROAD		1 //道
 
 #define MAP_NO		0 //撞墙
 #define MAP_YES		1 //正常
-#define MAP_OUT	2 //走出迷宫
+#define MAP_OUT		2 //走出迷宫
 
 /********************************
  * 迷宫对象

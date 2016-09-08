@@ -5,6 +5,8 @@
 
 using namespace std;
 
+
+/* 地图的定义 */
 vector< vector< vector<int> > > mazeMap = {
     {{WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL},
      {ROAD, ROAD, WALL, ROAD, ROAD, ROAD, ROAD, WALL, ROAD, ROAD, ROAD, WALL, ROAD, ROAD, ROAD, ROAD, WALL, ROAD, ROAD, ROAD, WALL, ROAD, ROAD, ROAD, ROAD, ROAD, ROAD, WALL},
@@ -50,12 +52,13 @@ void Maze::setAnchor_y(int _anchor_y) {
     m_iAnchor_y = _anchor_y;
 }
 
-/* 打印迷宫 */
+/* 打印地图 */
 void Maze::print() const {
     cout << "\e[2J";
     cout << "\e[" << this-> m_iAnchor_y - 2 << ";" << this->m_iAnchor_x + 1 << "H";
     cout << "<- 迷宫游戏 ->";
     int wall_len = this->m_strWall.size();
+
     for (int row = 0; row < mazeMap[this->m_intMaze].size(); row++) {
         for (int col = 0; col < mazeMap[this->m_intMaze][row].size(); col++) {
             cout << "\e[" << (row + this-> m_iAnchor_y) << ";" << (col * wall_len + this->m_iAnchor_x) << "H";
@@ -67,8 +70,10 @@ void Maze::print() const {
         }
         cout << endl;
     }
+    cout.flush();
 }
 
+/* 检查指定坐标在地图上的位置状态 */
 int Maze::checkPoint(int _x, int _y) const {
     if (_y < 0 || _y >= mazeMap[this->m_intMaze].size()
         || _x < 0 || _x >= mazeMap[this->m_intMaze][_y].size()) {

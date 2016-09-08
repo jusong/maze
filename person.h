@@ -4,9 +4,10 @@
 #include "maze.h"
 
 #define MOVE_NO		0 //撞墙
-#define MOVE_YES		1 //正常
-#define MOVE_OUT		2 //走出迷宫
+#define MOVE_YES	1 //正常
+#define MOVE_OUT	2 //走出迷宫
 
+/* 人类 */
 class Person {
  public:
     Person(int _x = 0, int _y = 1, string _body = "X", int _maze = 0, string _wall = "#", string _road = " ", int _anchor_x = 30, int _anchor_y = 5);
@@ -16,6 +17,7 @@ class Person {
     int moveLeft();
     int moveRight();
     void print();
+    void init();
     int getPosX();
     int getPosY();
     void setPosX();
@@ -33,7 +35,7 @@ class Person {
     int m_iPreX; //上一个位置横坐标
     int m_iPreY; //上一个位置纵坐标
     //int m_iDirection; //面朝方向
-    string m_strBody; //身体形状
+    string m_strBody; //身体形状,可以修改X为其他的东西
 };
 
 #endif
