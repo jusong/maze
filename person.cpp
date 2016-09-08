@@ -92,11 +92,11 @@ void Person::init() {
 void Person::print() {
     //首先把上个位置的人类擦除掉
     cout << "\e[" << this->m_mazeMap->getAnchor_y() + this-> m_iPreY << ";" << this->m_mazeMap->getAnchor_x() + this->m_iPreX << "H";
-    cout << this->m_mazeMap->getRoad();
+    cout << "\e[36;46m" << this->m_mazeMap->getRoad() << "\e[0m";
 
     //然后再在新的位置上打印出人类
     cout << "\e[" << this->m_mazeMap->getAnchor_y() + this-> m_iY << ";" << this->m_mazeMap->getAnchor_x() + this->m_iX << "H";
-    cout << this->m_strBody;
+    cout << "\e[30;42m" << this->m_strBody << "\e[0m";
     cout << "\e[20;0H";
 
     //最后刷新输出缓冲区

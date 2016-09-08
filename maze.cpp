@@ -63,9 +63,9 @@ void Maze::print() const {
         for (int col = 0; col < mazeMap[this->m_intMaze][row].size(); col++) {
             cout << "\e[" << (row + this-> m_iAnchor_y) << ";" << (col * wall_len + this->m_iAnchor_x) << "H";
             if (mazeMap[this->m_intMaze][row][col] == WALL) {
-                cout << this->m_strWall;
+                cout << "\e[34;44m" << this->m_strWall << "\e[0m";
             } else if (mazeMap[this->m_intMaze][row][col] == ROAD) {
-                cout << this->m_strRoad;
+                cout << "\e[36;46m" << this->m_strRoad << "\e[0m";
             }
         }
         cout << endl;
