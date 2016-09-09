@@ -1,7 +1,7 @@
 #include <iostream>
-#include <termios.h>
-#include <unistd.h>
+
 #include "person.h"
+#include "terminal.h"
 
 using namespace std;
 
@@ -9,22 +9,10 @@ int main(void) {
     Person person;
     
     person.init();
-
-    static struct termios oldt, newt;
-
-    /* 将当前设置写入oldt。*/
-    tcgetattr( STDIN_FILENO, &oldt );
-    newt = oldt;
-    /**
-     * ICANON 如果在输入中看到"\n"或者EOF，会返回缓冲区内容
-     * ECHO 用还控制回显
-     */
-    newt.c_lflag &=~(ICANON | ECHO); // 设置新的终端属性
-    /**
-     * TCSANOW 告诉函数立即改变终端的STDIN_FILENO属性值
-     */
-    tcsetattr( STDIN_FILENO, TCSANOW, &newt );
-
+    
+    //关闭游戏控制模式
+    startControlMode();
+    
     int ret = -1;
     do {
         int key1 = getchar();
@@ -59,8 +47,8 @@ int main(void) {
         }
     } while(1);
 
-    // 恢复终端设置
-    tcsetattr( STDIN_FILENO, TCSANOW, &oldt );
+    //关闭游戏控制模式
+    stopControlMode();
     
     return 0;
 }
