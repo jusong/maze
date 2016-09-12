@@ -1,3 +1,5 @@
+#include <stdlib.h>
+#include <stdio.h>
 #include <vector>
 
 #include "base.h"
@@ -5,12 +7,12 @@
 
 using namespace std;
 
-Base::Base(string _body, int _frontcolor, int _backcolor, int _width, int _height) {
-    m_strBody = _body;
-    m_iFrontColor = _frontcolor;
-    m_iBackColor = _backcolor;
+Base::Base(int _width, int _height) {
     m_iWidth = _width;
     m_iHeight = _height;
+    m_strBody = " ";
+    m_iColor = 0;
+    m_iAnch_x = m_iAnch_y = 0;
     m_pParent = NULL;
     m_pChilds = new vector<Base *>;
 }
@@ -24,12 +26,8 @@ void Base::setBody(string _body) {
     m_strBody = _body;
 }
 
-void Base::setFrontColor(int _frontcolor) {
-    m_iFrontColor = _frontcolor;
-}
-
-void Base::setBackColor(int _backcolor) {
-    m_iFrontColor = _backcolor;
+void Base::setColor(int _color) {
+    m_iColor = _color;
 }
 
 void Base::setWidth(int _width) {
@@ -48,25 +46,42 @@ void Base::setAnch_y(int _anch_y) {
     m_iAnch_y = _anch_y;
 }
 
-void Base::setRelatAnch_x(int _anch_x) {
-    m_iRelatAnch_x = _anch_x;
+int Base::getWidth() const {
+    return m_iWidth;
 }
 
-void Base::setRelatAnch_y(int _anch_y) {
-    m_iRelatAnch_y = _anch_y;
+int Base::getHeight() const {
+    return m_iHeight;
 }
 
-void Base::setParent(Base &parent) {
-    m_pParent = &parent;
+int Base::getAnch_x() const {
+    if (m_pParent) {
+        return m_pParent->getAnch_x() + ((m_iAnch_x >= 0) ? m_iAnch_x : (m_pParent->getWidth() + m_iAnch_x));
+    } else {
+        return abs(m_iAnch_x);
+    }
 }
 
-void Base::addChild(Base &child) {
-    m_pChilds->push_back(&child);
+int Base::getAnch_y() const {
+    if (m_pParent) {
+       	return m_pParent->getAnch_y() + ((m_iAnch_y >= 0) ? m_iAnch_y : (m_pParent->getHeight() + m_iAnch_y));
+    } else {
+        return abs(m_iAnch_y);
+    }
 }
 
-void Base::deleteChild(Base &child) {
+void Base::setParent(Base *parent) {
+    m_pParent = parent;
+}
+
+void Base::addChild(Base *child) {
+    m_pChilds->push_back(child);
+    child->setParent(this);
+}
+
+void Base::deleteChild(Base *child) {
     for (vector<Base *>::iterator iter = m_pChilds->begin(); iter != m_pChilds->end(); iter++) {
-        if (*iter == &child) {
+        if (*iter == child) {
             m_pChilds->erase(iter);
         }
     }
@@ -75,12 +90,25 @@ void Base::deleteChild(Base &child) {
 void Base::print() const {
     string line;
 
+    /* 清屏 */
     cleanScreen();
+
+    /* 刷新父级画布 */
+    if (m_pParent) {
+        m_pParent->print();
+    }
+    
+    /* 画背景 */
     for (int i = 0; i < m_iWidth; i++) {
         line += m_strBody;
     }
+    int anchX = getAnch_x();
+    int anchY = getAnch_y();
     for (int i = 0; i < m_iHeight; i++) {
-        gotoPoint(m_iAnchor_x, m_iAnchor_y + i);
-        colorPrint(line, m_iFrontColor, m_iBackColor);
+        gotoPoint(anchX, anchY + i);
+        colorPrint(line, m_iColor);
     }
+
+    /* 刷新输出缓存 */
+    cout.flush();
 }

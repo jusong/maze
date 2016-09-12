@@ -15,10 +15,10 @@ void gotoPoint(int x, int y);
 
 //按照指定颜色打印
 //@param T content 打印的内容
-//@param int frontcolor 前景色
 //@param int backcolor 背景色
+//@param int frontcolor 前景色
 template<typename T>
-void colorPrint(const T &content, int frontcolor, int backcolor) {
+void colorPrint(const T &content, int backcolor = 0, int frontcolor = 0) {
     cout << "\e[" << frontcolor << ";" << backcolor << "m" << content << "\e[0m";
 }
 
