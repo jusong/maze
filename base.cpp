@@ -1,6 +1,7 @@
 #include <vector>
 
 #include "base.h"
+#include "terminal.h"
 
 using namespace std;
 
@@ -12,13 +13,11 @@ Base::Base(string _body, int _frontcolor, int _backcolor, int _width, int _heigh
     m_iHeight = _height;
     m_pParent = NULL;
     m_pChilds = new vector<Base *>;
-    m_iChildCount = 0;
 }
 
 Base::~Base() {
     delete m_pChilds;
     m_pChilds = NULL;
-    m_iChildCount = 0;
 }
 
 void Base::setBody(string _body) {
@@ -41,7 +40,23 @@ void Base::setHeight(int _height) {
     m_iHeight = _height;
 }
 
-void Base::setPernt(Base &parent) {
+void Base::setAnch_x(int _anch_x) {
+    m_iAnch_x = _anch_x;
+}
+
+void Base::setAnch_y(int _anch_y) {
+    m_iAnch_y = _anch_y;
+}
+
+void Base::setRelatAnch_x(int _anch_x) {
+    m_iRelatAnch_x = _anch_x;
+}
+
+void Base::setRelatAnch_y(int _anch_y) {
+    m_iRelatAnch_y = _anch_y;
+}
+
+void Base::setParent(Base &parent) {
     m_pParent = &parent;
 }
 

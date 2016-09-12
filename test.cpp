@@ -1,16 +1,16 @@
 #include <iostream>
 
-#include "canvas.h"
+#include "base.h"
 
 int main(void) 
 {
 
-    Canvas cv;
+    Base base;
 
-    cv.setAnchor_x(20);
-    cv.setAnchor_y(2);
-    cv.setFrontColor(32);
-    cv.print();
+    base.setAnchor_x(20);
+    base.setAnchor_y(2);
+    base.setFrontColor(32);
+    base.print();
     
     return 0;
 }
