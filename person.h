@@ -9,6 +9,7 @@
 
 /* 人类 */
 class Person {
+
  public:
     Person(int _x = 0, int _y = 1, string _body = " ", int _maze = 0, string _wall = " ", string _road = " ", int _anchor_x = 30, int _anchor_y = 5);
     ~Person();
