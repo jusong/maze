@@ -27,6 +27,9 @@ void startControlMode() {
      * TCSANOW 告诉函数立即改变终端的STDIN_FILENO属性值
      */
     tcsetattr(STDIN_FILENO, TCSANOW, &termInfo);
+
+    /* 隐藏光标 */
+    hideCursor();
 }
 
 void stopControlMode() {
@@ -44,4 +47,17 @@ void stopControlMode() {
      * TCSANOW 告诉函数立即改变终端的STDIN_FILENO属性值
      */
     tcsetattr(STDIN_FILENO, TCSANOW, &termInfo);
+    
+    /* 显示光标 */
+    displayCursor();
+}
+
+//显示光标
+void displayCursor() {
+    cout << "\e[?25h";
+}
+
+//隐藏光标
+void hideCursor() {
+    cout << "\e[?25l";
 }

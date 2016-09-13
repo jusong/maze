@@ -20,11 +20,13 @@ class Base {
     int getHeight() const;
     int getAnch_x() const;
     int getAnch_y() const;
-    void print() const;
+    virtual void printSelf() const;
+    virtual void print() const;
+    vector<Base *>* getChilds() const;
     
-    void setParent(Base *parent);
-    void addChild(Base *child);
-    void deleteChild(Base *child);
+    virtual void setParent(Base *parent);
+    virtual void addChild(Base *child);
+    virtual void deleteChild(Base *child);
     
  protected:
     Base *m_pParent;

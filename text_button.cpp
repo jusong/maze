@@ -1,5 +1,6 @@
 #include <iostream>
 #include <math.h>
+#include <time.h>
 
 #include "text_button.h"
 #include "terminal.h"
@@ -29,18 +30,9 @@ void TextButton::setContentColor(int _content_color) {
     m_iContentColor = _content_color;
 }
 
-void TextButton::print() const {
-    string line;
-
-    /* 清屏 */
-    cleanScreen();
-
-    /* 刷新父级画布 */
-    if (m_pParent) {
-        m_pParent->print();
-    }
-    
+void TextButton::printSelf() const {
     /* 画背景 */
+    string line;
     for (int i = 0; i < m_iWidth; i++) {
         line += m_strBody;
     }
@@ -58,6 +50,35 @@ void TextButton::print() const {
     gotoPoint(textAnchX, textAnchY);
     colorPrint(m_strTitle + ":", m_iColor, m_iTitleColor);
     colorPrint(m_strContent, m_iColor, m_iContentColor);
+}
+
+void TextButton::print() const {
+    /* 一级画布，清屏刷新 */
+    if (!m_pParent) {
+        cleanScreen();
+    }
+
+    /* 画当前画布 */
+    printSelf();
+    
+    /* 同级右支画布刷新 */
+    if (m_pParent) {
+        int flag = 0;
+        vector<Base *> *childs = m_pParent->getChilds();
+        for (auto i : *childs) {
+            if (flag) {
+                i->printSelf();
+            }
+            if (i == this) {
+                flag = 1;
+            }
+        }
+    }
+
+    /* 刷新子级画布 */
+    for (auto i : *m_pChilds) {
+        i->printSelf();
+    }
     
     /* 刷新输出缓存 */
     cout.flush();

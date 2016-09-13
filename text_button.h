@@ -10,6 +10,7 @@ class TextButton : public Base {
     void setContent(const string &_content);
     void setTitleColor(int _title_color);
     void setContentColor(int _content_color);
+    void printSelf() const;
     void print() const;
 
  private:

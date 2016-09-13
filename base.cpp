@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <vector>
+#include <algorithm>
+#include <time.h>
 
 #include "base.h"
 #include "terminal.h"
@@ -70,35 +72,37 @@ int Base::getAnch_y() const {
     }
 }
 
+vector<Base *>* Base::getChilds() const {
+    return m_pChilds;
+}
+
 void Base::setParent(Base *parent) {
-    m_pParent = parent;
+    if (m_pParent != parent) {
+        m_pParent = parent;
+        parent->addChild(this);
+    }
 }
 
 void Base::addChild(Base *child) {
-    m_pChilds->push_back(child);
-    child->setParent(this);
+    vector<Base *>::iterator iter;
+    iter = find(m_pChilds->begin(), m_pChilds->end(), child);
+    if (iter == m_pChilds->end()) {
+        m_pChilds->push_back(child);
+        child->setParent(this);
+    }
 }
 
 void Base::deleteChild(Base *child) {
-    for (vector<Base *>::iterator iter = m_pChilds->begin(); iter != m_pChilds->end(); iter++) {
-        if (*iter == child) {
-            m_pChilds->erase(iter);
-        }
+    vector<Base *>::iterator iter;
+    iter = find(m_pChilds->begin(), m_pChilds->end(), child);
+    if (iter != m_pChilds->end()) {
+        m_pChilds->erase(iter);
     }
 }
 
-void Base::print() const {
-    string line;
-
-    /* 清屏 */
-    cleanScreen();
-
-    /* 刷新父级画布 */
-    if (m_pParent) {
-        m_pParent->print();
-    }
-    
+void Base::printSelf() const {
     /* 画背景 */
+    string line;
     for (int i = 0; i < m_iWidth; i++) {
         line += m_strBody;
     }
@@ -108,7 +112,37 @@ void Base::print() const {
         gotoPoint(anchX, anchY + i);
         colorPrint(line, m_iColor);
     }
+}
 
+void Base::print() const {
+    /* 一级画布，清屏刷新 */
+    if (!m_pParent) {
+        /* 清屏 */
+        cleanScreen();
+    }
+
+    /* 画当前画布 */
+    printSelf();
+    
+    /* 同级右支画布刷新 */
+    if (m_pParent) {
+        int flag = 0;
+        vector<Base *> *childs = m_pParent->getChilds();
+        for (auto i : *childs) {
+            if (flag) {
+                i->printSelf();
+            }
+            if (i == this) {
+                flag = 1;
+            }
+        }
+    }
+
+    /* 刷新子级画布 */
+    for (auto i : *m_pChilds) {
+        i->printSelf();
+    }
+    
     /* 刷新输出缓存 */
     cout.flush();
 }

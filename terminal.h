@@ -30,5 +30,11 @@ void startControlMode();
 
 //关闭终端控制模式: 终端规范模式，打开回显
 void stopControlMode();
+
+//显示光标
+void displayCursor();
+
+//隐藏光标
+void hideCursor();
     
 #endif
