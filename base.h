@@ -7,26 +7,34 @@ using namespace std;
 
 class Base {
  public:
-    Base(int _width = 60, int _height = 20);
+    Base();
+    Base(int _width, int _height);
+    Base(Base &base);
     ~Base();
+    
     void setBody(string _body);
     void setColor(int _color);
     void setWidth(int _width);
     void setHeight(int _height);
     void setAnch_x(int _anch_x);
     void setAnch_y(int _anch_y);
+    virtual void setParent(Base *parent);
+    virtual void addChild(Base *child);
+    virtual void deleteChild(Base *child);
+    virtual bool isParent(Base *parent);
+    virtual bool isChild(Base *child);
 
+    string getBody() const;
+    int getColor() const;
     int getWidth() const;
     int getHeight() const;
     int getAnch_x() const;
     int getAnch_y() const;
-    virtual void printSelf() const;
-    virtual void print() const;
+    Base* getParent() const;
     vector<Base *>* getChilds() const;
     
-    virtual void setParent(Base *parent);
-    virtual void addChild(Base *child);
-    virtual void deleteChild(Base *child);
+    virtual void printSelf() const;
+    virtual void print(bool refreshBrother = true) const;
     
  protected:
     Base *m_pParent;

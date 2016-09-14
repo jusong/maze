@@ -9,6 +9,15 @@
 
 using namespace std;
 
+Base::Base() {
+    Terminal::getWs(m_iWidth, m_iHeight);
+    m_strBody = " ";
+    m_iColor = 0;
+    m_iAnch_x = m_iAnch_y = 0;
+    m_pParent = NULL;
+    m_pChilds = new vector<Base *>;
+}
+
 Base::Base(int _width, int _height) {
     m_iWidth = _width;
     m_iHeight = _height;
@@ -16,6 +25,21 @@ Base::Base(int _width, int _height) {
     m_iColor = 0;
     m_iAnch_x = m_iAnch_y = 0;
     m_pParent = NULL;
+    m_pChilds = new vector<Base *>;
+}
+
+Base::Base(Base &base) {
+    m_iWidth = base.getWidth();
+    m_iHeight = base.getHeight();
+    m_strBody = base.getBody();
+    m_iColor = base.getColor();
+    m_iAnch_x = base.getAnch_x();
+    m_iAnch_y = base.getAnch_y();
+    m_pParent = base.getParent();
+    /* 当前对象设置为父对象的子 */
+    if (m_pParent) {
+        m_pParent->addChild(this);
+    }
     m_pChilds = new vector<Base *>;
 }
 
@@ -48,15 +72,83 @@ void Base::setAnch_y(int _anch_y) {
     m_iAnch_y = _anch_y;
 }
 
+void Base::setParent(Base *parent) {
+    if (!isParent(parent)) {
+        /* 从现有父对象中删除当前对象 */
+        if (m_pParent) {
+            m_pParent->deleteChild(this);
+        }
+        
+        m_pParent = parent;
+        
+        /* 当前对象设置为父对象的子 */
+        if (m_pParent) {
+            m_pParent->addChild(this);
+        }
+    }
+}
+
+void Base::addChild(Base *child) {
+    if (child && !isChild(child)) {
+        m_pChilds->push_back(child);
+        child->setParent(this);
+    }
+}
+
+void Base::deleteChild(Base *child) {
+    if (child) {
+        vector<Base *>::iterator iter;
+        iter = find(m_pChilds->begin(), m_pChilds->end(), child);
+        if (iter != m_pChilds->end()) {
+            m_pChilds->erase(iter);
+        }
+    }
+}
+
+bool Base::isParent(Base *parent) {
+    return m_pParent == parent;
+}
+
+bool Base::isChild(Base *child) {
+    if (!child) {
+        return false;
+    }
+    vector<Base *>::iterator iter;
+    iter = find(m_pChilds->begin(), m_pChilds->end(), child);
+    return iter != m_pChilds->end();
+}
+
+string Base::getBody() const {
+    return m_strBody;
+}
+
+int Base::getColor() const {
+    return m_iColor;
+}
+
 int Base::getWidth() const {
-    return m_iWidth;
+    if (m_iWidth > 0) {
+        return m_iWidth;
+    } else if (m_pParent) {
+        return m_pParent->getWidth() + m_iWidth;
+    } else {
+        return abs(m_iWidth);
+    }
 }
 
 int Base::getHeight() const {
-    return m_iHeight;
+    if (m_iHeight > 0) {
+        return m_iHeight;
+    } else if (m_pParent) {
+        return m_pParent->getHeight() + m_iHeight;
+    } else {
+        return abs(m_iHeight);
+    }
 }
 
+//获取真实锚点横坐标
 int Base::getAnch_x() const {
+    /* 若设置了父类，当前锚点为相对于父类的锚点，否则为相对于（0,0）的锚点 */
     if (m_pParent) {
         return m_pParent->getAnch_x() + ((m_iAnch_x >= 0) ? m_iAnch_x : (m_pParent->getWidth() + m_iAnch_x));
     } else {
@@ -64,7 +156,9 @@ int Base::getAnch_x() const {
     }
 }
 
+//获取真实锚点纵坐标
 int Base::getAnch_y() const {
+    /* 若设置了父类，当前锚点为相对于父类的锚点，否则为相对于（0,0）的锚点 */
     if (m_pParent) {
        	return m_pParent->getAnch_y() + ((m_iAnch_y >= 0) ? m_iAnch_y : (m_pParent->getHeight() + m_iAnch_y));
     } else {
@@ -72,32 +166,12 @@ int Base::getAnch_y() const {
     }
 }
 
+Base* Base::getParent() const {
+    return m_pParent;
+}
+
 vector<Base *>* Base::getChilds() const {
     return m_pChilds;
-}
-
-void Base::setParent(Base *parent) {
-    if (m_pParent != parent) {
-        m_pParent = parent;
-        parent->addChild(this);
-    }
-}
-
-void Base::addChild(Base *child) {
-    vector<Base *>::iterator iter;
-    iter = find(m_pChilds->begin(), m_pChilds->end(), child);
-    if (iter == m_pChilds->end()) {
-        m_pChilds->push_back(child);
-        child->setParent(this);
-    }
-}
-
-void Base::deleteChild(Base *child) {
-    vector<Base *>::iterator iter;
-    iter = find(m_pChilds->begin(), m_pChilds->end(), child);
-    if (iter != m_pChilds->end()) {
-        m_pChilds->erase(iter);
-    }
 }
 
 void Base::printSelf() const {
@@ -109,30 +183,29 @@ void Base::printSelf() const {
     int anchX = getAnch_x();
     int anchY = getAnch_y();
     for (int i = 0; i < m_iHeight; i++) {
-        gotoPoint(anchX, anchY + i);
-        colorPrint(line, m_iColor);
+        Terminal::gotoPoint(anchX, anchY + i);
+        Terminal::colorPrint(line, m_iColor);
     }
 }
 
-void Base::print() const {
+void Base::print(bool refreshBrother) const {
     /* 一级画布，清屏刷新 */
     if (!m_pParent) {
         /* 清屏 */
-        cleanScreen();
+        Terminal::cleanScreen();
     }
 
     /* 画当前画布 */
     printSelf();
     
     /* 同级右支画布刷新 */
-    if (m_pParent) {
+    if (refreshBrother && m_pParent) {
         int flag = 0;
         vector<Base *> *childs = m_pParent->getChilds();
         for (auto i : *childs) {
             if (flag) {
-                i->printSelf();
-            }
-            if (i == this) {
+                i->print(false);
+            } else if (i == this) {
                 flag = 1;
             }
         }
@@ -140,7 +213,7 @@ void Base::print() const {
 
     /* 刷新子级画布 */
     for (auto i : *m_pChilds) {
-        i->printSelf();
+        i->print(false);
     }
     
     /* 刷新输出缓存 */
