@@ -3,6 +3,7 @@
 #include <vector>
 #include <algorithm>
 #include <time.h>
+#include <sstream>
 
 #include "base.h"
 #include "terminal.h"
@@ -175,17 +176,25 @@ vector<Base *>* Base::getChilds() const {
 }
 
 void Base::printSelf() const {
+    int width = getWidth();
+    int height = getHeight();
+    
     /* 画背景 */
     string line;
-    for (int i = 0; i < m_iWidth; i++) {
+    for (int i = 0; i < width; i++) {
         line += m_strBody;
     }
     int anchX = getAnch_x();
     int anchY = getAnch_y();
-    for (int i = 0; i < m_iHeight; i++) {
+    for (int i = 0; i < height; i++) {
         Terminal::gotoPoint(anchX, anchY + i);
         Terminal::colorPrint(line, m_iColor);
     }
+    Terminal::gotoPoint(anchX, anchY);
+    stringstream ss;
+    ss.str("");
+    ss << width << "x" << height;
+    Terminal::colorPrint(ss.str(), m_iColor, 31);
 }
 
 void Base::print(bool refreshBrother) const {

@@ -14,8 +14,14 @@ void Terminal::cleanScreen() {
 }
 
 void Terminal::startControlMode() {
+    int x, y;
+    getWs(x, y);
+    if (x < 100 || y < 20) {
+        cout << "Exit here, window size not satisfy(100x20)!" << endl;
+        exit(1);
+    }
+    
     struct termios termInfo;
-
     /* 获取当前终端信息 */
     tcgetattr(STDIN_FILENO, &termInfo);
 
@@ -93,4 +99,19 @@ void Terminal::getWs(int &x, int &y, int fd) {
     }
     y = size.ws_row;
     x = size.ws_col;
+}
+
+//设置终端尺寸
+void Terminal::setWs(int x, int y, int fd) {
+    struct winsize size;
+    if (ioctl(fd, TIOCGWINSZ, (char*)&size) < 0) {
+        perror("ioctl");
+        return;
+    }
+    size.ws_row = y;
+    size.ws_col = x;
+    if (ioctl(fd, TIOCSWINSZ, (char*)&size) < 0) {
+        perror("ioctl");
+        return;
+    }
 } 

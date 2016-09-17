@@ -45,6 +45,9 @@ namespace Terminal {
 
     //获取终端尺寸
     void getWs(int &x, int &y, int fd = STDIN_FILENO);
+    
+    //设置终端尺寸
+    void setWs(int x, int y, int fd = STDIN_FILENO);
 };
     
 #endif
