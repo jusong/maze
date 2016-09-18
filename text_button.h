@@ -5,15 +5,15 @@
 
 class TextButton : public Base {
  public:
-    TextButton(const string &_title = "", const string &content = "");
-    TextButton(TextButton &textbtn);
+    TextButton(const string &_title = "", int _content = 0);
+    TextButton(const TextButton &_textbtn);
     void setTitle(const string &_title);
-    void setContent(const string &_content);
-    void setTitleColor(int _title_color);
-    void setContentColor(int _content_color);
+    void setContent(const int _content);
+    void setTitleColor(const int _title_color);
+    void setContentColor(const int _content_color);
 
     string getTitle() const;
-    string getContent() const;
+    int getContent() const;
     int getTitleColor() const;
     int getContentColor() const;
     
@@ -21,7 +21,7 @@ class TextButton : public Base {
 
  private:
     string m_strTitle;		//标题
-    string m_strContent;	//内容
+    int m_iContent;			//内容
     int m_iTitleColor;		//标题颜色
     int m_iContentColor;	//内容颜色
 };

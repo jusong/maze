@@ -1,17 +1,22 @@
 #include <iostream>
 
+#include "canvas.h"
 #include "person.h"
 #include "terminal.h"
 
 using namespace std;
 
 int main(void) {
-    Person person;
-    
-    person.init();
-    
     //关闭游戏控制模式
-    startControlMode();
+    Terminal::startControlMode();
+
+    Canvas canvas;
+    Person person;
+
+    canvas.setAnch_x(40);
+    canvas.setAnch_y(5);
+    canvas.addPerson(person);
+    canvas.print();
     
     int ret = -1;
     do {
@@ -42,13 +47,15 @@ int main(void) {
                     //成功走出迷宫
                     cout << "Congrulation, you succeed!!!" << endl;
                     break;
+                } else if (MOVE_YES == ret) {
+                    canvas.setStepCount(canvas.getStepCount() + 1);
                 }
             }
         }
     } while(1);
 
     //关闭游戏控制模式
-    stopControlMode();
+    Terminal::stopControlMode();
     
     return 0;
 }

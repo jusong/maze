@@ -2,24 +2,38 @@
 #define CANVAS_H
 
 #include "base.h"
+#include "maze.h"
+#include "person.h"
+#include "text_button.h"
 
 class Canvas : public Base {
  public:
     Canvas();
-    void setBody(string _body);
-    void setFrontColor(int _frontcolor);
-    void setBackColor(int _backcolor);
-    void setWidth(int _width);
-    void setHeight(int _height);
-    void setAnchor_x(int _anchor_x);
-    void setAnchor_y(int _anchor_y);
-    void addChild(void *);
-    void deleteChild(void *);
-    void print() const;
+    void printSelf() const;
+    
+    Maze& getMaze();
+    int getScore() const;
+    int getCountDown() const;
+    int getStepCount() const;
+    int getLevel() const;
+    
+    void setScore(const int _score);
+    void setCountDown(const int _count_down);
+    void setStepCount(const int _step_count);
+    void setLevel(const int _level);
+
+    void addPerson(Person &_person);
     
  private:
-    int m_iAnchor_x;		//锚点横坐标
-    int m_iAnchor_y;		//锚点纵坐标
+    Base m_baseMazeMap;		//迷宫地图
+    Base m_baseInfoBoard;	//信息展示板
+    string m_strTitle;		//名称
+
+    Maze m_Maze;					//迷宫
+    TextButton m_txtBtnScore;		//分数
+    TextButton m_txtBtnCountDown;	//倒计时
+    TextButton m_txtBtnStepCount;	//步数
+    TextButton m_txtBtnLevel;		//关卡
 };
 
 #endif

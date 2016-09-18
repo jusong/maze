@@ -3,7 +3,6 @@
 #include <vector>
 #include <algorithm>
 #include <time.h>
-#include <sstream>
 
 #include "base.h"
 #include "terminal.h"
@@ -11,9 +10,9 @@
 using namespace std;
 
 Base::Base() {
-    //Terminal::getWs(m_iWidth, m_iHeight);
-    m_iWidth = 55;
-    m_iHeight = 20;
+    Terminal::getWs(m_iWidth, m_iHeight);
+    m_iId = 0;
+    m_strTag = "";
     m_strBody = " ";
     m_iColor = 0;
     m_iAnch_x = m_iAnch_y = 0;
@@ -21,7 +20,9 @@ Base::Base() {
     m_pChilds = new vector<Base *>;
 }
 
-Base::Base(int _width, int _height) {
+Base::Base(const int _width, const int _height) {
+    m_iId = 0;
+    m_strTag = "";
     m_iWidth = _width;
     m_iHeight = _height;
     m_strBody = " ";
@@ -31,14 +32,16 @@ Base::Base(int _width, int _height) {
     m_pChilds = new vector<Base *>;
 }
 
-Base::Base(Base &base) {
-    m_iWidth = base.getWidth();
-    m_iHeight = base.getHeight();
-    m_strBody = base.getBody();
-    m_iColor = base.getColor();
-    m_iAnch_x = base.getAnch_x();
-    m_iAnch_y = base.getAnch_y();
-    m_pParent = base.getParent();
+Base::Base(const Base &_base) {
+    m_iId = _base.getId();
+    m_strTag = _base.getTag();
+    m_iWidth = _base.getWidth();
+    m_iHeight = _base.getHeight();
+    m_strBody = _base.getBody();
+    m_iColor = _base.getColor();
+    m_iAnch_x = _base.getAnch_x();
+    m_iAnch_y = _base.getAnch_y();
+    m_pParent = _base.getParent();
     /* 当前对象设置为父对象的子 */
     if (m_pParent) {
         m_pParent->addChild(this);
@@ -51,28 +54,36 @@ Base::~Base() {
     m_pChilds = NULL;
 }
 
-void Base::setBody(string _body) {
+void Base::setBody(const string _body) {
     m_strBody = _body;
 }
 
-void Base::setColor(int _color) {
+void Base::setColor(const int _color) {
     m_iColor = _color;
 }
 
-void Base::setWidth(int _width) {
+void Base::setWidth(const int _width) {
     m_iWidth = _width;
 }
 
-void Base::setHeight(int _height) {
+void Base::setHeight(const int _height) {
     m_iHeight = _height;
 }
 
-void Base::setAnch_x(int _anch_x) {
+void Base::setAnch_x(const int _anch_x) {
     m_iAnch_x = _anch_x;
 }
 
-void Base::setAnch_y(int _anch_y) {
+void Base::setAnch_y(const int _anch_y) {
     m_iAnch_y = _anch_y;
+}
+
+void Base::setId(const int _id) {
+    m_iId = _id;
+}
+
+void Base::setTag(const string _tag) {
+    m_strTag = _tag;
 }
 
 void Base::setParent(Base *parent) {
@@ -108,11 +119,11 @@ void Base::deleteChild(Base *child) {
     }
 }
 
-bool Base::isParent(Base *parent) {
+bool Base::isParent(const Base *parent) {
     return m_pParent == parent;
 }
 
-bool Base::isChild(Base *child) {
+bool Base::isChild(const Base *child) {
     if (!child) {
         return false;
     }
@@ -169,6 +180,14 @@ int Base::getAnch_y() const {
     }
 }
 
+int Base::getId() const {
+    return m_iId;
+}
+
+string Base::getTag() const {
+    return m_strTag;
+}
+
 Base* Base::getParent() const {
     return m_pParent;
 }
@@ -192,11 +211,6 @@ void Base::printSelf() const {
         Terminal::gotoPoint(anchX, anchY + i);
         Terminal::colorPrint(line, m_iColor);
     }
-    Terminal::gotoPoint(anchX, anchY);
-    stringstream ss;
-    ss.str("");
-    ss << width << "x" << height;
-    Terminal::colorPrint(ss.str(), m_iColor, 31);
 }
 
 void Base::print(bool refreshBrother) const {
@@ -229,4 +243,43 @@ void Base::print(bool refreshBrother) const {
     
     /* 刷新输出缓存 */
     cout.flush();
+}
+
+Base* Base::findChildByTag(const string _tag) const {
+    if (m_pChilds) {
+        for(auto i : *m_pChilds) {
+            if (i->getTag() == _tag) {
+                return i;
+            }
+        }
+    }
+    return NULL;
+}
+
+Base* Base::findChildById(const int _id) const {
+    if (m_pChilds) {
+        for(auto i : *m_pChilds) {
+            if (i->getId() == _id) {
+                return i;
+            }
+        }
+    }
+    return NULL;
+}
+
+Base& Base::operator=(const Base &_base) {
+    m_iId = _base.getId();
+    m_strTag = _base.getTag();
+    m_iWidth = _base.getWidth();
+    m_iHeight = _base.getHeight();
+    m_strBody = _base.getBody();
+    m_iColor = _base.getColor();
+    m_iAnch_x = _base.getAnch_x();
+    m_iAnch_y = _base.getAnch_y();
+    m_pParent = _base.getParent();
+    /* 当前对象设置为父对象的子 */
+    if (m_pParent) {
+        m_pParent->addChild(this);
+    }
+    m_pChilds = new vector<Base *>;
 }

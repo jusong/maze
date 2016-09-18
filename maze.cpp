@@ -2,95 +2,86 @@
 #include <vector>
 
 #include "maze.h"
+#include "terminal.h"
 
 using namespace std;
 
 
 /* 地图的定义 */
-vector< vector< vector<int> > > mazeMap = {
-    {{WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL},
-     {ROAD, ROAD, WALL, ROAD, ROAD, ROAD, ROAD, WALL, ROAD, ROAD, ROAD, WALL, ROAD, ROAD, ROAD, ROAD, WALL, ROAD, ROAD, ROAD, WALL, ROAD, ROAD, ROAD, ROAD, ROAD, ROAD, WALL},
-     {WALL, ROAD, WALL, ROAD, WALL, ROAD, WALL, WALL, ROAD, WALL, ROAD, WALL, ROAD, WALL, ROAD, WALL, WALL, ROAD, WALL, ROAD, WALL, ROAD, WALL, ROAD, WALL, WALL, ROAD, WALL},
-     {WALL, ROAD, ROAD, ROAD, ROAD, ROAD, ROAD, WALL, ROAD, ROAD, ROAD, ROAD, ROAD, ROAD, ROAD, ROAD, WALL, ROAD, ROAD, ROAD, ROAD, ROAD, ROAD, ROAD, ROAD, WALL, ROAD, WALL},
+vector< vector< vector<int> > > Maze::mazeMap = {
+    {{WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL},
+     {ROAD, ROAD, WALL, ROAD, ROAD, ROAD, ROAD, WALL, ROAD, ROAD, ROAD, WALL, ROAD, ROAD, ROAD, ROAD, WALL, ROAD, ROAD, ROAD, WALL, ROAD, ROAD, ROAD, ROAD, ROAD, ROAD, WALL, WALL, WALL, WALL, WALL},
+     {WALL, ROAD, WALL, ROAD, WALL, ROAD, WALL, WALL, ROAD, WALL, ROAD, WALL, ROAD, WALL, ROAD, WALL, WALL, ROAD, WALL, ROAD, WALL, ROAD, WALL, ROAD, WALL, WALL, ROAD, WALL, WALL, WALL, WALL, WALL},
+     {WALL, ROAD, ROAD, ROAD, ROAD, ROAD, ROAD, WALL, ROAD, ROAD, ROAD, ROAD, ROAD, ROAD, ROAD, ROAD, WALL, ROAD, ROAD, ROAD, ROAD, ROAD, ROAD, ROAD, ROAD, WALL, ROAD, WALL, WALL, WALL, WALL, WALL},
      {WALL, ROAD, WALL, WALL, WALL, WALL, ROAD, WALL, WALL, ROAD, ROAD, WALL, WALL, WALL, WALL, ROAD, WALL, WALL, ROAD, ROAD, WALL, WALL, WALL, WALL, WALL, WALL, ROAD, ROAD, WALL, WALL, WALL, WALL},
      {WALL, ROAD, WALL, ROAD, ROAD, WALL, ROAD, ROAD, WALL, ROAD, ROAD, WALL, ROAD, ROAD, WALL, ROAD, ROAD, WALL, ROAD, ROAD, WALL, ROAD, ROAD, WALL, ROAD, ROAD, WALL, ROAD, ROAD, ROAD, ROAD, WALL},
      {WALL, ROAD, ROAD, ROAD, WALL, WALL, ROAD, WALL, WALL, ROAD, ROAD, ROAD, ROAD, WALL, WALL, ROAD, WALL, WALL, ROAD, ROAD, ROAD, ROAD, WALL, WALL, ROAD, WALL, WALL, ROAD, WALL, WALL, ROAD, ROAD},
      {WALL, ROAD, WALL, WALL, WALL, WALL, ROAD, ROAD, ROAD, ROAD, ROAD, WALL, WALL, WALL, WALL, ROAD, ROAD, WALL, ROAD, ROAD, WALL, WALL, WALL, WALL, ROAD, ROAD, WALL, WALL, WALL, WALL, WALL, WALL},
-     {WALL, ROAD, WALL, ROAD, ROAD, ROAD, ROAD, WALL, ROAD, ROAD, ROAD, WALL, ROAD, ROAD, ROAD, ROAD, WALL, ROAD, ROAD, ROAD, WALL, ROAD, ROAD, ROAD, ROAD, WALL, ROAD, WALL},
-     {WALL, ROAD, WALL, ROAD, WALL, ROAD, WALL, WALL, ROAD, WALL, ROAD, WALL, ROAD, WALL, ROAD, WALL, WALL, ROAD, WALL, ROAD, WALL, ROAD, WALL, ROAD, WALL, WALL, ROAD, WALL},
-     {WALL, ROAD, ROAD, ROAD, ROAD, ROAD, ROAD, WALL, ROAD, ROAD, ROAD, WALL, ROAD, ROAD, ROAD, ROAD, WALL, ROAD, ROAD, ROAD, ROAD, ROAD, ROAD, ROAD, ROAD, WALL, ROAD, WALL},
+     {WALL, ROAD, WALL, ROAD, ROAD, ROAD, ROAD, WALL, ROAD, ROAD, ROAD, WALL, ROAD, ROAD, ROAD, ROAD, WALL, ROAD, ROAD, ROAD, WALL, ROAD, ROAD, ROAD, ROAD, WALL, ROAD, WALL, WALL, WALL, WALL, WALL},
+     {WALL, ROAD, WALL, ROAD, WALL, ROAD, WALL, WALL, ROAD, WALL, ROAD, WALL, ROAD, WALL, ROAD, WALL, WALL, ROAD, WALL, ROAD, WALL, ROAD, WALL, ROAD, WALL, WALL, ROAD, WALL, WALL, WALL, WALL, WALL},
+     {WALL, ROAD, ROAD, ROAD, ROAD, ROAD, ROAD, WALL, ROAD, ROAD, ROAD, WALL, ROAD, ROAD, ROAD, ROAD, WALL, ROAD, ROAD, ROAD, ROAD, ROAD, ROAD, ROAD, ROAD, WALL, ROAD, WALL, WALL, WALL, WALL, WALL},
      {WALL, ROAD, WALL, WALL, WALL, WALL, ROAD, WALL, WALL, ROAD, ROAD, WALL, WALL, WALL, WALL, ROAD, WALL, WALL, ROAD, ROAD, WALL, WALL, WALL, WALL, ROAD, WALL, WALL, ROAD, WALL, WALL, WALL, WALL},
      {WALL, ROAD, WALL, ROAD, ROAD, WALL, ROAD, ROAD, WALL, ROAD, ROAD, WALL, ROAD, ROAD, WALL, ROAD, ROAD, ROAD, ROAD, ROAD, WALL, ROAD, ROAD, WALL, ROAD, ROAD, WALL, ROAD, ROAD, ROAD, ROAD, WALL},
      {WALL, ROAD, ROAD, ROAD, WALL, WALL, ROAD, WALL, WALL, ROAD, ROAD, ROAD, ROAD, WALL, WALL, ROAD, WALL, WALL, ROAD, ROAD, ROAD, ROAD, WALL, WALL, ROAD, WALL, WALL, ROAD, WALL, WALL, ROAD, WALL},
      {WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL}}
 };
 
-Maze::Maze(int _maze, string _wall, string _road, int _anchor_x, int _anchor_y):m_intMaze(_maze) {
-    m_strWall = _wall;
-    m_strRoad = _road;
-    m_iAnchor_x = _anchor_x;
-    m_iAnchor_y = _anchor_y;
+Maze::Maze() {
+    m_iWallColor = 43;
+    m_iRoadColor = 42;
+    m_iMap = 0;
+    m_iWidth = mazeMap[m_iMap][0].size();
+    m_iHeight = mazeMap[m_iMap].size();
 }
 
-void Maze::setWall(string _wall) {
-    m_strWall = _wall;
+void Maze::setWallColor(const int _wall_color) {
+    m_iWallColor = _wall_color;
 }
 
-void Maze::setRoad(string _road) {
-    m_strRoad = _road;
+void Maze::setRoadColor(const int _road_color) {
+    m_iRoadColor = _road_color;
 }
 
-string Maze::getRoad() {
-    return m_strRoad;
+void Maze::setMap(const int _map) {
+    m_iMap = _map;
 }
 
-void Maze::setAnchor_x(int _anchor_x) {
-    m_iAnchor_x = _anchor_x;
+int Maze::getWallColor() const {
+    return m_iWallColor;
 }
 
-void Maze::setAnchor_y(int _anchor_y) {
-    m_iAnchor_y = _anchor_y;
+int Maze::getRoadColor() const {
+    return m_iRoadColor;
+}
+
+int Maze::getMap() const {
+    return m_iMap;
 }
 
 /* 打印地图 */
-void Maze::print() const {
-    cout << "\e[2J";
-    cout << "\e[" << this-> m_iAnchor_y - 2 << ";" << this->m_iAnchor_x + 1 << "H";
-    cout << "<- 迷宫游戏 ->";
-    int wall_len = this->m_strWall.size();
-
-    for (int row = 0; row < mazeMap[this->m_intMaze].size(); row++) {
-        for (int col = 0; col < mazeMap[this->m_intMaze][row].size(); col++) {
-            cout << "\e[" << (row + this-> m_iAnchor_y) << ";" << (col * wall_len + this->m_iAnchor_x) << "H";
-            if (mazeMap[this->m_intMaze][row][col] == WALL) {
-                cout << "\e[34;44m" << this->m_strWall << "\e[0m";
-            } else if (mazeMap[this->m_intMaze][row][col] == ROAD) {
-                cout << "\e[36;46m" << this->m_strRoad << "\e[0m";
+void Maze::printSelf() const {
+    int anchX = getAnch_x();
+    int anchY = getAnch_y();
+    for (int row = 0; row < mazeMap[this->m_iMap].size(); row++) {
+        for (int col = 0; col < mazeMap[this->m_iMap][row].size(); col++) {
+            Terminal::gotoPoint(col + anchX, row + anchY);
+            if (mazeMap[this->m_iMap][row][col] == WALL) {
+                Terminal::colorPrint(" ", m_iWallColor);
+            } else if (mazeMap[this->m_iMap][row][col] == ROAD) {
+                Terminal::colorPrint(" ", m_iRoadColor);
             }
         }
-        cout << endl;
     }
-    cout.flush();
 }
 
 /* 检查指定坐标在地图上的位置状态 */
 int Maze::checkPoint(int _x, int _y) const {
-    if (_y < 0 || _y >= mazeMap[this->m_intMaze].size()
-        || _x < 0 || _x >= mazeMap[this->m_intMaze][_y].size()) {
+    if (_y < 0 || _y >= mazeMap[this->m_iMap].size()
+        || _x < 0 || _x >= mazeMap[this->m_iMap][_y].size()) {
         return MAP_OUT;
-    } else if (WALL == mazeMap[this->m_intMaze][_y][_x]) {
+    } else if (WALL == mazeMap[this->m_iMap][_y][_x]) {
         return MAP_NO;
     } else {
         return MAP_YES;
     }
 }
-
-int Maze::getAnchor_x() {
-    return this->m_iAnchor_x;
-}
-
-int Maze::getAnchor_y() {
-    return this->m_iAnchor_y;
-}
-
-

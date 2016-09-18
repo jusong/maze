@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 #include <math.h>
 #include <time.h>
 
@@ -7,15 +8,15 @@
 
 using namespace std;
 
-TextButton::TextButton(const string &_title, const string &_content) {
+TextButton::TextButton(const string &_title, int _content): Base(12, 1){
     m_strTitle = _title;
-    m_strContent = _content;
+    m_iContent = _content;
     m_iTitleColor = m_iContentColor = 0;
 }
 
-TextButton::TextButton(TextButton &textbtn):Base(textbtn) {
+TextButton::TextButton(const TextButton &textbtn):Base(textbtn) {
     m_strTitle = textbtn.getTitle();
-    m_strContent = textbtn.getContent();
+    m_iContent = textbtn.getContent();
     m_iTitleColor = textbtn.getTitleColor();
     m_iContentColor = textbtn.getContentColor();
 }
@@ -24,15 +25,15 @@ void TextButton::setTitle(const string &_title) {
     m_strTitle = _title;
 }
 
-void TextButton::setContent(const string &_content) {
-    m_strContent = _content;
+void TextButton::setContent(const int _content) {
+    m_iContent = _content;
 }
 
-void TextButton::setTitleColor(int _title_color) {
+void TextButton::setTitleColor(const int _title_color) {
     m_iTitleColor = _title_color;
 }
 
-void TextButton::setContentColor(int _content_color) {
+void TextButton::setContentColor(const int _content_color) {
     m_iContentColor = _content_color;
 }
 
@@ -40,8 +41,8 @@ string TextButton::getTitle() const {
     return m_strTitle;
 }
 
-string TextButton::getContent() const {
-    return m_strContent;
+int TextButton::getContent() const {
+    return m_iContent;
 }
 
 int TextButton::getTitleColor() const {
@@ -69,10 +70,16 @@ void TextButton::printSelf() const {
     }
 
     /* 输出内容 */
-    int contentLen = m_strTitle.size() * 2 / 3 + 1 + m_strContent.size();
+    stringstream ss;
+    ss.str("");
+    ss << m_iContent;
+    string content;
+    ss >> content;
+    //中文3个字节，显示出来占用俩个字符位置
+    int contentLen = m_strTitle.size() * 2 / 3 + 1 + content.size();
     int textAnchX = anchX + (int)floor((width - contentLen) / 2.0);
     int textAnchY = anchY + (int)floor(height / 2.0);
     Terminal::gotoPoint(textAnchX, textAnchY);
     Terminal::colorPrint(m_strTitle + ":", m_iColor, m_iTitleColor);
-    Terminal::colorPrint(m_strContent, m_iColor, m_iContentColor);
+    Terminal::colorPrint(content, m_iColor, m_iContentColor);
 }
