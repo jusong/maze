@@ -5,7 +5,7 @@
 
 class Canvas : public Base {
  public:
-    Canvas(string _body = " ", int _frontcolor = 34, int _backcolor = 44, int _width = 60, int _height = 20);
+    Canvas();
     void setBody(string _body);
     void setFrontColor(int _frontcolor);
     void setBackColor(int _backcolor);

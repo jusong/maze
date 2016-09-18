@@ -16,8 +16,8 @@ void Terminal::cleanScreen() {
 void Terminal::startControlMode() {
     int x, y;
     getWs(x, y);
-    if (x < 100 || y < 20) {
-        cout << "Exit here, window size not satisfy(100x20)!" << endl;
+    if (x < 63 || y < 27) {
+        cout << "Exit here, window size not satisfy(63x27)!" << endl;
         exit(1);
     }
     
