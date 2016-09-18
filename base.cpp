@@ -12,8 +12,8 @@ using namespace std;
 
 Base::Base() {
     //Terminal::getWs(m_iWidth, m_iHeight);
-    m_iWidth = 63;
-    m_iHeight = 27;
+    m_iWidth = 55;
+    m_iHeight = 20;
     m_strBody = " ";
     m_iColor = 0;
     m_iAnch_x = m_iAnch_y = 0;
