@@ -20,6 +20,7 @@ class Base {
     void setAnch_y(const int _anch_y);
     void setId(const int _id);
     void setTag(const string _tag);
+    void setHidden(bool _hidden);
     
     virtual void setParent(Base *parent);
     virtual void addChild(Base *child);
@@ -57,6 +58,8 @@ class Base {
     int m_iHeight;			//高度
     int m_iAnch_x;			//锚点横坐标
     int m_iAnch_y;			//锚点纵坐标
+
+    bool m_bHidden;			//隐藏
 };
 
 #endif

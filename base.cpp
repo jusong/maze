@@ -18,6 +18,7 @@ Base::Base() {
     m_iAnch_x = m_iAnch_y = 0;
     m_pParent = NULL;
     m_pChilds = new vector<Base *>;
+    m_bHidden = false;
 }
 
 Base::Base(const int _width, const int _height) {
@@ -30,6 +31,7 @@ Base::Base(const int _width, const int _height) {
     m_iAnch_x = m_iAnch_y = 0;
     m_pParent = NULL;
     m_pChilds = new vector<Base *>;
+    m_bHidden = false;
 }
 
 Base::Base(const Base &_base) {
@@ -47,6 +49,7 @@ Base::Base(const Base &_base) {
         m_pParent->addChild(this);
     }
     m_pChilds = new vector<Base *>;
+    m_bHidden = false;
 }
 
 Base::~Base() {
@@ -84,6 +87,10 @@ void Base::setId(const int _id) {
 
 void Base::setTag(const string _tag) {
     m_strTag = _tag;
+}
+
+void Base::setHidden(bool _hidden) {
+    m_bHidden = _hidden;
 }
 
 void Base::setParent(Base *parent) {
@@ -214,35 +221,42 @@ void Base::printSelf() const {
 }
 
 void Base::print(bool refreshBrother) const {
-    /* 一级画布，清屏刷新 */
-    if (!m_pParent) {
-        /* 清屏 */
-        Terminal::cleanScreen();
-    }
+    if (m_bHidden && m_pParent) {
+        //最底层画布不允许隐藏
+        if (refreshBrother) {
+            m_pParent->print();
+        }
+    } else {
+        /* 一级画布，清屏刷新 */
+        if (!m_pParent) {
+            /* 清屏 */
+            Terminal::cleanScreen();
+        }
 
-    /* 画当前画布 */
-    printSelf();
+        /* 画当前画布 */
+        printSelf();
     
-    /* 同级右支画布刷新 */
-    if (refreshBrother && m_pParent) {
-        int flag = 0;
-        vector<Base *> *childs = m_pParent->getChilds();
-        for (auto i : *childs) {
-            if (flag) {
-                i->print(false);
-            } else if (i == this) {
-                flag = 1;
+        /* 同级右支画布刷新 */
+        if (refreshBrother && m_pParent) {
+            int flag = 0;
+            vector<Base *> *childs = m_pParent->getChilds();
+            for (auto i : *childs) {
+                if (flag) {
+                    i->print(false);
+                } else if (i == this) {
+                    flag = 1;
+                }
             }
         }
-    }
 
-    /* 刷新子级画布 */
-    for (auto i : *m_pChilds) {
-        i->print(false);
-    }
+        /* 刷新子级画布 */
+        for (auto i : *m_pChilds) {
+            i->print(false);
+        }
     
-    /* 刷新输出缓存 */
-    cout.flush();
+        /* 刷新输出缓存 */
+        cout.flush();
+    }
 }
 
 Base* Base::findChildByTag(const string _tag) const {

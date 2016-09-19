@@ -16,17 +16,27 @@ class Canvas : public Base {
     int getCountDown() const;
     int getStepCount() const;
     int getLevel() const;
+    string& getTitle();
     
     void setScore(const int _score);
     void setCountDown(const int _count_down);
     void setStepCount(const int _step_count);
     void setLevel(const int _level);
+    void setTitle(const string _title);
+    
     void addScore(const int _score);
     void addCountDown(const int _count_down);
     void addStepCount(const int _step_count);
     void addLevel(const int _level);
-
     void addPerson(Person &_person);
+    void hiddenMaze();
+    void showInfo(const string _info);
+    void init();
+    bool nextLevel();
+    void success();
+    void failed();
+    void resetLevel();
+    int calScore();
     
  private:
     Base m_baseMazeMap;		//迷宫地图

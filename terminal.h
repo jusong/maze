@@ -22,7 +22,7 @@ namespace Terminal {
     //@param int frontcolor 前景色
     template<typename T>
     void colorPrint(const T &content, int backcolor = 0, int frontcolor = 0) {
-        cout << "\e[" << frontcolor << ";" << backcolor << "m" << content << "\e[0m";
+        cout << "\e[" << (frontcolor > 0 ? frontcolor : 0) << ";" << (backcolor > 0 ? backcolor : 0) << "m" << content << "\e[0m";
     }
 
     //清屏，光标定位到(0,0)

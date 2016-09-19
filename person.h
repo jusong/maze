@@ -27,6 +27,7 @@ class Person: public Base {
     void setPosY(const int _y);
     void setBody(const string _body);
     void setBodyColor(const int _body_color);
+	void init();
 
  private:
     void move(int _x, int _y);

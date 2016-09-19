@@ -30,6 +30,8 @@ class Maze: public Base {
     
     void printSelf() const;
     virtual int checkPoint(int _x, int _y) const;
+    bool nextMap();
+    void init();
 
  private:
     int m_iMap;

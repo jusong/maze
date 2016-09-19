@@ -6,7 +6,7 @@
 using namespace std;
 
 void Terminal::gotoPoint(int x, int y) {
-    cout << "\e[" << (y >= 0 ? y + 1 : 0) << ";" << (x >= 0 ? x + 1: 0) << "H";
+    cout << "\e[" << (y >= 0 ? y : 0) << ";" << (x >= 0 ? x : 0) << "H";
 }
 
 void Terminal::cleanScreen() {

@@ -10,6 +10,7 @@ Person::Person(string _body) {
     m_iX = m_iPreX = 0;
     m_iY = m_iPreY = 1;
     m_strBody = _body;
+    m_iBodyColor = 0;
 }
 
 /* 上移 */
@@ -80,10 +81,11 @@ void Person::move(int _x, int _y) {
 
 /* 画人 */
 void Person::printSelf() const {
-    //首先把上个位置的人类擦除掉
     Maze *parent = (Maze *)getParent();
     int anchX = parent->getAnch_x();
     int anchY = parent->getAnch_y();
+    
+    //首先把上个位置的人类擦除掉
     Terminal::gotoPoint(anchX + m_iPreX, anchY + m_iPreY);
     Terminal::colorPrint(" ", parent->getRoadColor());
 
@@ -118,4 +120,9 @@ void Person::setBody(const string _body) {
 
 void Person::setBodyColor(const int _body_color) {
     m_iBodyColor = _body_color;
+}
+
+void Person::init() {
+    m_iX = m_iPreX = 0;
+    m_iY = m_iPreY = 1;
 }

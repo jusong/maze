@@ -3,6 +3,7 @@
 #include "canvas.h"
 #include "person.h"
 #include "terminal.h"
+#include "config.h"
 
 using namespace std;
 
@@ -13,15 +14,19 @@ Canvas canvas;
 int main(void) {
     //关闭游戏控制模式
     Terminal::startControlMode();
-    
-    Person person;
 
     signal(SIGALRM, sig_alarm);
-    
+
+    canvas.setTitle("迷宫游戏");
     canvas.setAnch_x(40);
     canvas.setAnch_y(5);
+    
+    Person person("A");
+    person.setColor(PERSON_BG_COLOR);
+    person.setBodyColor(PERSON_FT_COLOR);
+    
     canvas.addPerson(person);
-    canvas.print();
+    canvas.init();
     
     alarm(1);
     int ret = -1;
@@ -51,8 +56,23 @@ int main(void) {
                 }
                 if (MOVE_OUT == ret) {
                     //成功走出迷宫
-                    cout << "Congrulation, you succeed!!!" << endl;
-                    break;
+                    canvas.success();
+                    alarm(0);
+                    if (getchar() == 27) {
+                    	if (getchar() == 91) {
+							getchar();
+						}
+					}
+                    if (!canvas.nextLevel()) {
+        				canvas.showInfo("You Vectory，^V^!\n\nPress any key to restart!");
+                        if (getchar() == 27) {
+                        	if (getchar() == 91) {
+				 	   			getchar();
+				 	   		}
+				 	   	}
+    					canvas.init();
+					}
+                    alarm(1);
                 } else if (MOVE_YES == ret) {
                     canvas.setStepCount(canvas.getStepCount() + 1);
                 }
@@ -71,9 +91,10 @@ void sig_alarm(int sig) {
         canvas.addCountDown(-1);
         alarm(1);
     } else {
-        cout << "Sorry, time ended, you failed!" << endl;
-        //关闭游戏控制模式
-        Terminal::stopControlMode();
-        exit(1);
+        alarm(0);
+        canvas.failed();
+        getchar();
+        canvas.resetLevel();
+        alarm(1);
     }
 }

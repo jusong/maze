@@ -1,14 +1,16 @@
 #include <iostream>
+#include <vector>
 
-#include "canvas.h"
-//#include "person.h"
-//#include "terminal.h"
+#include "common.h"
 
 using namespace std;
 
-// void sig_alarm(int sig);
-//
-Canvas *cs = new Canvas();
-//TextButton bt;
 int main(void) {
+	string str = "adsfasdf\nsdfasdf\n\nsdfsdf\nasdfasdf";
+	//vector<string> v = Common::split(str, "\n");
+	//for(string l : v) {
+	for(auto l : Common::split(str, "\n")) {
+		cout << l << endl;
+	}
+	return 0;
 }
