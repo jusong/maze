@@ -6,18 +6,24 @@
 
 using namespace std;
 
+void sig_alarm(int sig);
+
+Canvas canvas;
+
 int main(void) {
     //关闭游戏控制模式
     Terminal::startControlMode();
-
-    Canvas canvas;
+    
     Person person;
 
+    signal(SIGALRM, sig_alarm);
+    
     canvas.setAnch_x(40);
     canvas.setAnch_y(5);
     canvas.addPerson(person);
     canvas.print();
     
+    alarm(1);
     int ret = -1;
     do {
         int key1 = getchar();
@@ -58,4 +64,16 @@ int main(void) {
     Terminal::stopControlMode();
     
     return 0;
+}
+
+void sig_alarm(int sig) {
+    if (canvas.getCountDown() > 0) {
+        canvas.addCountDown(-1);
+        alarm(1);
+    } else {
+        cout << "Sorry, time ended, you failed!" << endl;
+        //关闭游戏控制模式
+        Terminal::stopControlMode();
+        exit(1);
+    }
 }

@@ -9,6 +9,7 @@ class TextButton : public Base {
     TextButton(const TextButton &_textbtn);
     void setTitle(const string &_title);
     void setContent(const int _content);
+    void addContent(const int _content);
     void setTitleColor(const int _title_color);
     void setContentColor(const int _content_color);
 

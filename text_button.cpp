@@ -29,6 +29,10 @@ void TextButton::setContent(const int _content) {
     m_iContent = _content;
 }
 
+void TextButton::addContent(const int _content) {
+    m_iContent += _content;
+}
+
 void TextButton::setTitleColor(const int _title_color) {
     m_iTitleColor = _title_color;
 }

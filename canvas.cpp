@@ -40,7 +40,7 @@ Canvas::Canvas():Base(49, 20) {
     //倒计时
     m_txtBtnCountDown.setParent(&m_baseInfoBoard);
     m_txtBtnCountDown.setTitle("倒计时");
-    m_txtBtnCountDown.setContent(100);
+    m_txtBtnCountDown.setContent(30);
     m_txtBtnCountDown.setAnch_x(1);
     m_txtBtnCountDown.setAnch_y(3);
     m_txtBtnCountDown.setTag("count_down");
@@ -97,6 +97,26 @@ void Canvas::setStepCount(const int _step_count) {
 
 void Canvas::setLevel(const int _level) {
     m_txtBtnLevel.setContent(_level);
+    m_txtBtnLevel.print();
+}
+
+void Canvas::addScore(const int _score) {
+    m_txtBtnScore.addContent(_score);
+    m_txtBtnScore.print();
+}
+
+void Canvas::addCountDown(const int _count_down) {
+    m_txtBtnCountDown.addContent(_count_down);
+    m_txtBtnCountDown.print();
+}
+
+void Canvas::addStepCount(const int _step_count) {
+    m_txtBtnStepCount.addContent(_step_count);
+    m_txtBtnStepCount.print();
+}
+
+void Canvas::addLevel(const int _level) {
+    m_txtBtnLevel.addContent(_level);
     m_txtBtnLevel.print();
 }
 

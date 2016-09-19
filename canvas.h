@@ -21,6 +21,10 @@ class Canvas : public Base {
     void setCountDown(const int _count_down);
     void setStepCount(const int _step_count);
     void setLevel(const int _level);
+    void addScore(const int _score);
+    void addCountDown(const int _count_down);
+    void addStepCount(const int _step_count);
+    void addLevel(const int _level);
 
     void addPerson(Person &_person);
     

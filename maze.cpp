@@ -30,8 +30,8 @@ Maze::Maze() {
     m_iWallColor = 43;
     m_iRoadColor = 42;
     m_iMap = 0;
-    m_iWidth = mazeMap[m_iMap][0].size();
-    m_iHeight = mazeMap[m_iMap].size();
+    m_iWidth = 32;
+    m_iHeight = 15;
 }
 
 void Maze::setWallColor(const int _wall_color) {
