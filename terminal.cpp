@@ -1,5 +1,7 @@
 #include <iostream>
 #include <signal.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 #include "terminal.h"
 
@@ -13,14 +15,7 @@ void Terminal::cleanScreen() {
     cout << "\e[2J";
 }
 
-void Terminal::startControlMode() {
-    int x, y;
-    getWs(x, y);
-    if (x < 49 || y < 20) {
-        cout << "Exit here, window size not satisfy(49x20)!" << endl;
-        exit(1);
-    }
-    
+void Terminal::startControlMode() {    
     struct termios termInfo;
     /* 获取当前终端信息 */
     tcgetattr(STDIN_FILENO, &termInfo);
@@ -40,12 +35,12 @@ void Terminal::startControlMode() {
 
     /* 捕获Ctrl-C按键 */
     if (signal(SIGINT, Terminal::sign_quit) == SIG_ERR) {
-        perror("startControlMode");
+        cout << "startControlMode" << endl;
         exit(-1);
     }
     /* 捕获Ctrl-\按键 */
     if (signal(SIGQUIT, Terminal::sign_quit) == SIG_ERR) {
-        perror("startControlMode");
+        cout << "startControlMode" << endl;
         exit(-1);
     }
 }
@@ -94,7 +89,7 @@ void Terminal::hideCursor() {
 void Terminal::getWs(int &x, int &y, int fd) {
     struct winsize size;  
     if (ioctl(fd, TIOCGWINSZ, (char*)&size) < 0) {
-        perror("ioctl");
+        cout << "ioctl" << endl;
         return;
     }
     y = size.ws_row;
@@ -105,13 +100,60 @@ void Terminal::getWs(int &x, int &y, int fd) {
 void Terminal::setWs(int x, int y, int fd) {
     struct winsize size;
     if (ioctl(fd, TIOCGWINSZ, (char*)&size) < 0) {
-        perror("ioctl");
+        cout << "ioctl" << endl;
         return;
     }
     size.ws_row = y;
     size.ws_col = x;
     if (ioctl(fd, TIOCSWINSZ, (char*)&size) < 0) {
-        perror("ioctl");
+        cout << "ioctl" << endl;
         return;
     }
 } 
+
+//等待特定按键
+int Terminal::getKey(const int type) {
+    char buf[4];
+    size_t len;
+    
+    switch(type) {
+    case 1:
+        //获取方向按键
+        while((len = read(STDIN_FILENO, buf, 3)) != -1) {
+            if (3 == len && 27 == buf[0] && 91 == buf[1]) {
+                return buf[2];
+            }
+            switch(buf[0]) {
+            case 'w':
+            case 'W':
+                //上
+                return UP;
+            case 's':
+            case 'S':
+                //上
+                return DOWN;
+            case 'a':
+            case 'A':
+                //上
+                return LEFT;
+            case 'd':
+            case 'D':
+                //上
+                return RIGHT;
+            case ESC:
+                //上
+                return ESC;
+            }
+        }
+        break;
+    case 2:
+        //确认键(ESC:退出;Enter：继续)
+        while((len = read(STDIN_FILENO, buf, 3)) != -1) {
+            if (1 == len && (GOON == buf[0] || ESC == buf[0])) {
+                return buf[0];
+            }
+        }
+        break;
+    }
+    return 0;
+}

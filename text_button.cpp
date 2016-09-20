@@ -5,10 +5,11 @@
 
 #include "text_button.h"
 #include "terminal.h"
+#include "config.h"
 
 using namespace std;
 
-TextButton::TextButton(const string &_title, int _content): Base(12, 1){
+TextButton::TextButton(const string &_title, int _content): Base(TXTBTN_WIDTH, TXTBTN_HEIGHT){
     m_strTitle = _title;
     m_iContent = _content;
     m_iTitleColor = m_iContentColor = 0;
