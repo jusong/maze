@@ -1,59 +1,58 @@
 #include <iostream>
+
+#include "maze.h"
 #include "person.h"
+#include "terminal.h"
 
 using namespace std;
 
-Person::Person(int _x, int _y, string _body, int _maze, string _wall, string _road, int _anchor_x, int _anchor_y) {
-    this->m_iX = this->m_iPreX = _x;
-    this->m_iY = this->m_iPreY = _y;
-    this->m_strBody = _body;
-    this->m_mazeMap = new Maze(_maze, _wall, _road, _anchor_x, _anchor_y);
-}
-
-Person::~Person() {
-    delete this->m_mazeMap;
-    this->m_mazeMap = NULL;
+Person::Person(string _body) {
+    m_iX = m_iPreX = 0;
+    m_iY = m_iPreY = 1;
+    m_strBody = _body;
+    m_iBodyColor = 0;
 }
 
 /* 上移 */
 int Person::moveUp() {
-    int ret = this->checkMove(this->m_iX, this->m_iY - 1);
+    int ret = checkMove(m_iX, m_iY - 1);
     if (MOVE_YES == ret) {
-        this->move(this->m_iX, this->m_iY - 1);
+        move(m_iX, m_iY - 1);
     }
     return ret;
 }
 
 /* 下移 */
 int Person::moveDown() {
-    int ret = this->checkMove(this->m_iX, this->m_iY + 1);
+    int ret = checkMove(m_iX, m_iY + 1);
     if (MOVE_YES == ret) {
-        this->move(this->m_iX, this->m_iY + 1);
+        move(m_iX, m_iY + 1);
     }
     return ret;
 }
 
 /* 左移 */
 int Person::moveLeft() {
-    int ret = this->checkMove(this->m_iX - 1, this->m_iY);
+    int ret = checkMove(m_iX - 1, m_iY);
     if (MOVE_YES == ret) {
-        this->move(this->m_iX - 1, this->m_iY);
+        move(m_iX - 1, m_iY);
     }
     return ret;
 }
 
 /* 右移 */
 int Person::moveRight() {
-    int ret = this->checkMove(this->m_iX + 1, this->m_iY);
+    int ret = checkMove(m_iX + 1, m_iY);
     if (MOVE_YES == ret) {
-        this->move(this->m_iX + 1, this->m_iY);
+        move(m_iX + 1, m_iY);
     }
     return ret;
 }
 
 /* 每走一步都会检查：会不会撞墙，会不会退出去了，或者成功走出去了 */
-int Person::checkMove(int _x, int _y) {
-    int ret = this->m_mazeMap->checkPoint(_x, _y);
+int Person::checkMove(int _x, int _y) const {
+    Maze *parent = (Maze *)getParent();
+    int ret = parent->checkPoint(_x, _y);
     if (MAP_YES == ret) {
         /* 正常 */
         return MOVE_YES;
@@ -73,33 +72,57 @@ int Person::checkMove(int _x, int _y) {
 
 /* 移动人类 */
 void Person::move(int _x, int _y) {
-    this->m_iPreX = this->m_iX;
-    this->m_iPreY = this->m_iY;
-    this->m_iX = _x;
-    this->m_iY = _y;
-    this->print();
-}
-
-/* 初始化 */
-void Person::init() {
-    //画迷宫地图
-    this->m_mazeMap->print();
-    //画人
-    this->print();
+    m_iPreX = m_iX;
+    m_iPreY = m_iY;
+    m_iX = _x;
+    m_iY = _y;
+    print();
 }
 
 /* 画人 */
-void Person::print() {
+void Person::printSelf() const {
+    Maze *parent = (Maze *)getParent();
+    int anchX = parent->getAnch_x();
+    int anchY = parent->getAnch_y();
+    
     //首先把上个位置的人类擦除掉
-    cout << "\e[" << this->m_mazeMap->getAnchor_y() + this-> m_iPreY << ";" << this->m_mazeMap->getAnchor_x() + this->m_iPreX << "H";
-    cout << "\e[36;46m" << this->m_mazeMap->getRoad() << "\e[0m";
+    Terminal::gotoPoint(anchX + m_iPreX, anchY + m_iPreY);
+    Terminal::colorPrint(" ", parent->getRoadColor());
 
     //然后再在新的位置上打印出人类
-    cout << "\e[" << this->m_mazeMap->getAnchor_y() + this-> m_iY << ";" << this->m_mazeMap->getAnchor_x() + this->m_iX << "H";
-    cout << "\e[30;42m" << this->m_strBody << "\e[0m";
-    cout << "\e[20;0H";
-
-    //最后刷新输出缓冲区
-    cout.flush();
+    Terminal::gotoPoint(anchX + m_iX, anchY + m_iY);
+    Terminal::colorPrint(m_strBody, m_iColor, m_iBodyColor);
 }
 
+int Person::getPosX() const {
+    return m_iX;
+}
+
+int Person::getPosY() const {
+    return m_iY;
+}
+
+int Person::getBodyColor() const {
+    return m_iBodyColor;
+}
+
+void Person::setPosX(const int _x) {
+    m_iX = _x;
+}
+
+void Person::setPosY(const int _y) {
+    m_iY = _y;
+}
+
+void Person::setBody(const string _body) {
+    m_strBody = _body;
+}
+
+void Person::setBodyColor(const int _body_color) {
+    m_iBodyColor = _body_color;
+}
+
+void Person::init() {
+    m_iX = m_iPreX = 0;
+    m_iY = m_iPreY = 1;
+}

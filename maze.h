@@ -3,6 +3,8 @@
 
 #include <vector>
 
+#include "base.h"
+
 using namespace std;
 
 #define WALL		2 //墙
@@ -15,26 +17,28 @@ using namespace std;
 /********************************
  * 迷宫对象
  ********************************/
-class Maze {
+class Maze: public Base {
  public:
-    Maze(int _maze = 0, string _wall = "*", string _road = " ", int _anchor_x = 10, int _anchor_y = 10);
-    void setWall(const string);
-    void setRoad(const string);
-    string getRoad();
-    void setAnchor_x(const int);
-    void setAnchor_y(const int);
-    int getAnchor_x();
-    int getAnchor_y();
+    Maze();
+    void setWallColor(const int _wall_color);
+    void setRoadColor(const int _road_color);
+    void setMap(const int _map);
+
+    int getWallColor() const;
+    int getRoadColor() const;
+    int getMap() const;
     
-    void print() const;
-    int checkPoint(int _x, int _y) const;
+    void printSelf() const;
+    virtual int checkPoint(int _x, int _y) const;
+    bool nextMap();
+    void reset();
+    void init();
 
  private:
-    const int m_intMaze;
-    string m_strWall;
-    string m_strRoad;
-    int m_iAnchor_x;
-    int m_iAnchor_y;
+    int m_iMap;
+    int m_iWallColor;
+    int m_iRoadColor;
+    static vector< vector< vector<int> > > mazeMap;
 };
 
 #endif
